@@ -15,7 +15,7 @@ description: Git workflow for json-swift (JSON Young macOS app) — use git swit
   - `Tests/JSONLinterTests/` — unit tests
   - `Scripts/` — bundling, DMG, and icon scripts
   - `Resources/` — `Info.plist`, assets
-- **Common commands**: `task run`, `task test`, `task release`, `swift test`, `swift build`
+- **Common commands**: `task dev`, `task test`, `task release`, `swift test`, `swift build`
 
 ## Rules
 
@@ -128,7 +128,7 @@ task test
 For UI or bundling changes, verify the app launches:
 
 ```bash
-task run
+task dev
 ```
 
 ## Quick checklist
