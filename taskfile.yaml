@@ -2,7 +2,7 @@ version: '3'
 
 tasks:
 
-  run:
+  dev:
     desc: Build and launch JSON Young (debug)
     cmds:
       - osascript -e 'quit app "JSON Young"' >/dev/null 2>&1 || true

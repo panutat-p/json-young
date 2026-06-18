@@ -38,13 +38,32 @@ Pick the template that matches the change. Do **not** include a Test Plan sectio
 1. **Problem** — What is broken? Where does it show up in the app?
 2. **Root Cause** — Why it happens (SwiftUI state, JSON parsing edge case, bundle config, etc.)
 3. **Solution** — What was changed and why that fixes it
+4. **Code changes** — Table of every file touched (see below)
 
 #### New feature
 
 1. **Overview** — What the feature does and why it is needed
 2. **Implementation** — How it was built: key files, approach, and notable design choices
+3. **Code changes** — Table of every file touched (see below)
 
 Optional: add a diagram (mermaid) when the change involves data flow, view-model state, or build pipeline steps.
+
+#### Code changes (required)
+
+Every PR body must end with a **Code changes** section: a markdown table listing **every file** in the PR diff.
+
+Use `git diff <base>...HEAD --stat` (or `gh pr diff [number] --stat`) to enumerate files. Group rows by area (App, Library, Tests, Build, Project, Docs, Tooling, etc.). One row per file or logical path (e.g. `Resources/Assets.xcassets/AppIcon.appiconset/*`).
+
+| Area | File | Change |
+|------|------|--------|
+| App | `Sources/JSONLinter/LinterViewModel.swift` | Short description of what changed |
+| Library | `Sources/JSONLinterLib/JSONLinter.swift` | Short description of what changed |
+
+- **Area** — coarse category for scanning (App, Library, Tests, Build, Project, Docs, Tooling)
+- **File** — path relative to repo root, in backticks
+- **Change** — one-line summary (added, removed, renamed, or what behavior changed)
+
+For large/binary-only paths (icon PNGs), one grouped row is fine. Do not omit files from the diff.
 
 ### Create PR
 
@@ -65,6 +84,13 @@ Optional: add a diagram (mermaid) when the change involves data flow, view-model
 
    - Call `validate()` from the paste handler in `ContentView`
    - Extract shared validation trigger so typing and paste use the same path
+
+   ## Code changes
+
+   | Area | File | Change |
+   |------|------|--------|
+   | App | `Sources/JSONLinter/ContentView.swift` | Call `validate()` after paste events |
+   | App | `Sources/JSONLinter/LinterViewModel.swift` | Extract shared validation trigger for typing and paste |
    EOF
    )"
    ```
@@ -82,6 +108,14 @@ Optional: add a diagram (mermaid) when the change involves data flow, view-model
    - Register `formatJSON` in `KeyboardShortcuts.swift`
    - Wire the shortcut to `LinterViewModel.format()` from `ContentView`
    - Reuse existing formatting logic so menu and shortcut stay in sync
+
+   ## Code changes
+
+   | Area | File | Change |
+   |------|------|--------|
+   | App | `Sources/JSONLinter/ContentView.swift` | Wire ⌘⇧F shortcut to formatting action |
+   | App | `Sources/JSONLinter/LinterViewModel.swift` | Expose `format()` for menu and shortcut |
+   | App | `Sources/JSONLinter/KeyboardShortcuts.swift` | Register `formatJSON` keyboard shortcut |
    EOF
    )"
    ```
@@ -193,4 +227,5 @@ gh pr merge [number] --squash --delete-branch
 - Omit `[number]` to target the PR for the current branch.
 - Use `--web` on any command to open that PR in the browser.
 - `gh pr view --json title,body,reviews,reviewRequests` for structured data.
-- When updating an existing PR with `gh pr edit --body`, keep the same template sections (bug fix: Problem, Root Cause, Solution; new feature: Overview, Implementation).
+- When updating an existing PR with `gh pr edit --body`, keep the same template sections (bug fix: Problem, Root Cause, Solution, Code changes; new feature: Overview, Implementation, Code changes).
+- Regenerate the **Code changes** table when new commits are pushed to the PR branch.

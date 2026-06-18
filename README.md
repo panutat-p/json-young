@@ -10,10 +10,10 @@ A macOS desktop app for validating and pretty-printing JSON, built with Swift an
 ## Build and run
 
 ```bash
-task run
+task dev
 ```
 
-`task run` builds a debug `.app` bundle and opens it with macOS `open`, which is required for the GUI window to appear reliably.
+`task dev` builds a debug `.app` bundle and opens it with macOS `open`, which is required for the GUI window to appear reliably.
 
 Release `.dmg` for distribution:
 
