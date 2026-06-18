@@ -31,19 +31,24 @@ Do **not** use conventional commit prefixes (`feat:`, `fix:`, `chore:`, etc.) or
 
 ### PR Body
 
-Always include these sections, in this order:
+Pick the template that matches the change. Do **not** include a Test Plan section.
 
-1. **Problem** — What is broken or missing? Where does it show up in the app?
+#### Bug fix
+
+1. **Problem** — What is broken? Where does it show up in the app?
 2. **Root Cause** — Why it happens (SwiftUI state, JSON parsing edge case, bundle config, etc.)
 3. **Solution** — What was changed and why that fixes it
-4. **Affected Files** — Table or bullet list of changed files with a short note per file
-5. **Test Plan** — Manual verification checklist and/or `swift test` coverage
+
+#### New feature
+
+1. **Overview** — What the feature does and why it is needed
+2. **Implementation** — How it was built: key files, approach, and notable design choices
 
 Optional: add a diagram (mermaid) when the change involves data flow, view-model state, or build pipeline steps.
 
 ### Create PR
 
-1. Create PR with title and body:
+1. Create PR with title and body (bug fix example):
 
    ```bash
    gh pr create --title "Fix footer not updating after paste" --body "$(cat <<'EOF'
@@ -60,20 +65,23 @@ Optional: add a diagram (mermaid) when the change involves data flow, view-model
 
    - Call `validate()` from the paste handler in `ContentView`
    - Extract shared validation trigger so typing and paste use the same path
+   EOF
+   )"
+   ```
 
-   ## Affected Files
+   New feature example:
 
-   | File | Change |
-   |------|--------|
-   | `Sources/JSONLinter/ContentView.swift` | Validate after paste |
-   | `Sources/JSONLinter/LinterViewModel.swift` | Shared validation entry point |
+   ```bash
+   gh pr create --title "Add keyboard shortcut for JSON formatting" --body "$(cat <<'EOF'
+   ## Overview
 
-   ## Test Plan
+   Users can format JSON in the editor with ⌘⇧F instead of using the menu.
 
-   - [ ] `swift test` passes
-   - [ ] `task run` — paste valid JSON, footer shows valid immediately
-   - [ ] Paste invalid JSON, footer shows error immediately
-   - [ ] Typing still updates footer as before
+   ## Implementation
+
+   - Register `formatJSON` in `KeyboardShortcuts.swift`
+   - Wire the shortcut to `LinterViewModel.format()` from `ContentView`
+   - Reuse existing formatting logic so menu and shortcut stay in sync
    EOF
    )"
    ```
@@ -180,20 +188,9 @@ gh pr merge [number] --auto --squash
 gh pr merge [number] --squash --delete-branch
 ```
 
-## Test plan reference
-
-Use these commands in PR test plans for this repo:
-
-| Command | When |
-|---------|------|
-| `swift test` | Logic changes in `JSONLinterLib` or view model |
-| `task test` | Same as `swift test` via Taskfile |
-| `task run` | UI, keyboard shortcuts, or app launch behavior |
-| `task release` | Bundling, DMG, or release-script changes |
-
 ## Tips
 
 - Omit `[number]` to target the PR for the current branch.
 - Use `--web` on any command to open that PR in the browser.
 - `gh pr view --json title,body,reviews,reviewRequests` for structured data.
-- When updating an existing PR with `gh pr edit --body`, keep the same required sections: Problem, Root Cause, Solution, Affected Files, Test Plan.
+- When updating an existing PR with `gh pr edit --body`, keep the same template sections (bug fix: Problem, Root Cause, Solution; new feature: Overview, Implementation).
