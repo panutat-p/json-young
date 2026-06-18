@@ -56,14 +56,11 @@ struct ContentView: View {
     }
 
     private var editor: some View {
-        TextEditor(text: $viewModel.text)
-            .font(.system(.body, design: .monospaced))
-            .scrollContentBackground(.hidden)
-            .padding(12)
-            .background(Color(nsColor: .textBackgroundColor))
-            .onChange(of: viewModel.text) { _, _ in
-                viewModel.textDidChange()
-            }
+        HighlightedJSONEditor(text: $viewModel.text) {
+            viewModel.textDidChange()
+        }
+        .padding(12)
+        .background(Color(nsColor: .textBackgroundColor))
     }
 
     private var footer: some View {
