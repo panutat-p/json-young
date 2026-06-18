@@ -22,6 +22,7 @@ jobs:
 
       - name: Build release app
         run: |
+          swift build -c release
           chmod +x Scripts/bundle-app.sh
           Scripts/bundle-app.sh release
 
