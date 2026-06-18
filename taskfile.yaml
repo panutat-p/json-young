@@ -1,0 +1,45 @@
+version: '3'
+
+tasks:
+
+  run:
+    desc: Build and launch JSON Young (debug)
+    cmds:
+      - osascript -e 'quit app "JSON Young"' >/dev/null 2>&1 || true
+      - task: bundle
+        vars: { CONFIG: debug }
+      - open ".build/JSON Young.app"
+
+  release:
+    desc: Build release .app and export .dmg to the project root
+    cmds:
+      - task: bundle
+        vars: { CONFIG: release }
+      - chmod +x Scripts/create-dmg.sh
+      - Scripts/create-dmg.sh
+
+  bundle:
+    internal: true
+    requires:
+      vars: [CONFIG]
+    cmds:
+      - swift build{{if ne .CONFIG "debug"}} -c release{{end}}
+      - chmod +x Scripts/bundle-app.sh
+      - Scripts/bundle-app.sh {{.CONFIG}}
+
+  icons:
+    desc: Generate AppIcon.png and build AppIcon.icns
+    cmds:
+      - chmod +x Scripts/build-app-icon.sh
+      - Scripts/build-app-icon.sh
+
+  test:
+    desc: Run all unit tests
+    cmds:
+      - swift test
+
+  clean:
+    desc: Clean Swift build artifacts
+    cmds:
+      - swift package clean
+      - rm -rf ".build/JSON Young.app" ".build/dmg-staging" "JSON_Young.dmg"

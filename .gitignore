@@ -1,0 +1,4 @@
+.build/
+.venv-icon/
+.DS_Store
+JSON_Young.dmg
